@@ -69,28 +69,35 @@
     </div>
     <script>
         async function convertTextToSpeech() {
-            const text = document.getElementById('text').value;
-            if (!text) {
-                alert('Please enter some text');
-                return;
-            }
+    const text = document.getElementById('text').value;
+    if (!text) {
+        alert('Please enter some text');
+        return;
+    }
 
-            const response = await fetch('/tts', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ text: text }),
-            });
+    try {
+        const response = await fetch('/tts', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ text: text }),
+        });
 
-            if (response.ok) {
-                const blob = await response.blob();
-                const url = URL.createObjectURL(blob);
-                document.getElementById('audio').src = url;
-            } else {
-                alert('Error: ' + response.statusText);
-            }
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
         }
+
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        document.getElementById('audio').src = url;
+        document.getElementById('audio').play(); // Ensure to play the audio
+    } catch (error) {
+        console.error('Error converting text to speech:', error);
+        alert('Error converting text to speech');
+    }
+}
+
     </script>
 </body>
 </html>
