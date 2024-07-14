@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text to Speech</title>
+    <style>
+        body{
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-image: url("https://png.pngtree.com/background/20210710/original/pngtree-business-microphone-crowd-speech-background-material-picture-image_1037679.jpg");
+            height: 100vh; /* Set height to full viewport height */
+            margin: 0; /* Remove default margin */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        .outer{
+            background-color: white;
+            text-align: center;
+            width: fit-content;
+            padding: 2rem;
+            margin: auto;
+            margin-top: 14rem;
+        }
+        .box{
+            displap:flex;
+            padding: 40px;
+            background-color:whitesmoke;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .header{
+            flex-direction: column;
+            display: flex;
+            gap:10px;
+            justify-content: center;
+            align-items: center;
+        }
+        input{
+            padding: 0.4rem;
+            font-size: 20px;   
+        }
+        button{
+            padding:0.6rem;
+            fonr-size:20px;
+            background-color:rgb(200, 247, 232);
+        }
+        button:hover{
+            border-radius: 10px;
+            color:black;
+            background-color:green;
+        }
+    </style>
+</head>
+<body>
+    <div class="outer">
+        <div class="box">
+        <h1>Text to Speech Converter</h1><br />
+        <input type="text" id="text" placeholder="Enter text here">
+        <button onclick="convertTextToSpeech()">Convert</button><br/><br />
+        <audio id="audio" controls></audio>
+        </div>
+    </div>
+    <script>
+        async function convertTextToSpeech() {
+            const text = document.getElementById('text').value;
+            if (!text) {
+                alert('Please enter some text');
+                return;
+            }
+
+            const response = await fetch('/tts', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ text: text }),
+            });
+
+            if (response.ok) {
+                const blob = await response.blob();
+                const url = URL.createObjectURL(blob);
+                document.getElementById('audio').src = url;
+            } else {
+                alert('Error: ' + response.statusText);
+            }
+        }
+    </script>
+</body>
+</html>
