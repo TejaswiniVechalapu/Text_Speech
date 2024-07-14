@@ -22,4 +22,4 @@ def tts():
     return send_file('output.mp3', as_attachment=True)
 
 if __name__ == '__main__':
-    app.run(debug=False,host='0.0.0.0')
+    app.run(debug=True)
